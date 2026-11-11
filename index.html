@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SurplusShare &ndash; Food Wastage Management Website</title>
+<style>
+:root{--g:#1b5e3b;--d:#123d29;--y:#f4b942;--c:#fbf7ee;--m:#e8f3ea;--ink:#1f2a24;--mut:#55645d;--ln:#d9e6dc}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",system-ui,Arial,sans-serif;color:var(--ink);line-height:1.65;background:#fff}
+[id]{scroll-margin-top:84px}a{color:var(--g)}img,svg{max-width:100%;height:auto}
+.wrap{max-width:1100px;margin:auto;padding:0 22px}
+.util{background:var(--d);color:#fff;font-size:.85rem}.util .wrap{display:flex;justify-content:space-between;gap:12px;padding:8px 22px}
+.util a{color:#fff;text-decoration:none;margin-left:16px}.util a.gold{color:var(--y);font-weight:700}
+header{position:sticky;top:0;z-index:20;background:#fff;box-shadow:0 2px 12px #0001}
+.bar{display:flex;align-items:center;gap:14px;padding:10px 22px;max-width:1100px;margin:auto}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--g);font-weight:800;font-size:1.35rem;line-height:1.1}
+.brand small{display:block;font-weight:400;font-size:.72rem;color:var(--mut)}
+nav.main{margin-left:auto;display:flex;gap:4px}
+nav.main a{padding:8px 12px;border-radius:999px;text-decoration:none;color:var(--ink);font-weight:600;font-size:.93rem}
+nav.main a:hover{background:var(--m);color:var(--g)}
+#nav-toggle,.burger{display:none}
+.hero{background:linear-gradient(135deg,var(--g),var(--d));color:#fff}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;padding:64px 22px}
+.hero h1{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.1;margin:0 0 18px}.hero h1 em{color:var(--y)}
+.hero p{font-size:1.15rem;color:#e6f2ea}.hero svg{width:100%;filter:drop-shadow(0 18px 30px #0004);transition:transform .4s}.hero svg:hover{transform:rotate(-2deg) scale(1.03)}
+.btn{display:inline-block;padding:13px 24px;border-radius:999px;font-weight:700;text-decoration:none;margin:6px 10px 0 0;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 18px #0003}.b1{background:var(--y);color:var(--d)}.b2{background:#fff;color:var(--g)}
+.band{padding:60px 0}.alt{background:var(--c)}.mint{background:var(--m)}
+.eyebrow{color:#8a6d5a;font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:0}
+h2{color:var(--g);font-size:clamp(1.6rem,3.2vw,2.3rem);line-height:1.2;margin:.3em 0 .5em}h3{color:var(--d)}
+.center{text-align:center}.center p{max-width:720px;margin-inline:auto}
+.grid{display:grid;gap:22px;margin-top:30px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}
+.stat{text-align:center}.stat b{display:block;font-size:2rem;color:var(--g)}.stat span{color:var(--mut);font-size:.93rem}
+.card{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:24px;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 30px #1b5e3b22}
+.card .tag{font-size:.7rem;font-weight:800;color:#8a6d5a;letter-spacing:.1em;margin:12px 0 0}.card h3{margin:.2em 0}.card p{color:var(--mut);font-size:.95rem}
+.card a.more{font-weight:700;text-decoration:none}.card a.more:hover{text-decoration:underline}
+.step{text-align:center}.step h3{margin:.4em 0 .2em}.step p{color:var(--mut)}
+.feat{background:var(--y)}.feat .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:38px 22px}.feat h2{margin:.1em 0}
+.feat .btn{background:var(--g);color:#fff;white-space:nowrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:36px}.two .wrap{padding:0}
+fieldset{border:1px solid var(--ln);border-radius:16px;background:#fff;padding:18px 22px}legend{font-weight:700;color:var(--g);padding:0 8px}
+label{font-weight:600;font-size:.92rem}
+input,select{width:100%;max-width:520px;padding:11px 13px;margin-top:5px;border:1.5px solid #c6d6cb;border-radius:10px;font:inherit;background:#fff;transition:border-color .2s,box-shadow .2s}
+input[type=checkbox]{width:auto;margin-right:6px}input:focus,select:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px #1b5e3b22}
+input:valid:not(:placeholder-shown){border-color:#3f9a64}
+button{font:inherit;font-weight:700;padding:11px 22px;border:0;border-radius:999px;background:var(--g);color:#fff;cursor:pointer;transition:background .2s,transform .2s}
+button:hover{background:var(--d);transform:translateY(-2px)}button[type=reset],button[type=button]{background:#e3ece6;color:var(--d)}
+#available-food{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}#available-food>:not(article){grid-column:1/-1}
+article{background:#fff;border:1px solid var(--ln);border-left:6px solid var(--y);border-radius:14px;padding:6px 20px 16px;transition:transform .25s,box-shadow .25s}
+article:hover{transform:translateY(-5px);box-shadow:0 14px 26px #1b5e3b22}article ul{padding-left:18px;color:var(--mut)}
+article strong{background:var(--m);color:var(--g);padding:2px 10px;border-radius:999px}
+table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px var(--ln)}
+caption{text-align:left;font-weight:700;color:var(--g);padding:6px 0}th{background:var(--g);color:#fff;text-align:left}th,td{padding:10px 14px;border-bottom:1px solid var(--ln)}tbody tr:hover{background:var(--m)}
+#report nav{background:var(--c);border-radius:14px;padding:6px 24px 10px}pre{background:var(--d);color:#e6f2ea;padding:16px;border-radius:12px;overflow:auto}
+blockquote{margin:16px 0;padding:12px 20px;background:var(--m);border-left:5px solid var(--g);border-radius:0 12px 12px 0}
+dt{font-weight:700;color:var(--g)}dd{margin:0 0 8px 18px}hr{border:0;border-top:1px solid var(--ln);margin:30px 0}
+address{font-style:normal;font-size:1.1rem}
+footer{background:var(--d);color:#cfe3d6;padding:44px 0 20px}footer .cols{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:28px}
+footer h4{color:var(--y);margin:0 0 8px;font-size:.8rem;letter-spacing:.1em}footer a{display:block;color:#fff;text-decoration:none;padding:2px 0}footer a:hover{color:var(--y)}
+footer .fine{border-top:1px solid #ffffff30;margin-top:26px;padding-top:14px;font-size:.82rem}footer .fine a{display:inline;color:var(--y)}
+@media(max-width:860px){.hero .wrap,.two,.feat .wrap,footer .cols{grid-template-columns:1fr;display:grid}.g4,.g3,#available-food{grid-template-columns:1fr 1fr}
+.burger{display:block;margin-left:auto;font-size:1.7rem;cursor:pointer;color:var(--g)}nav.main{display:none;position:absolute;left:0;right:0;top:100%;background:#fff;flex-direction:column;padding:10px 22px 16px;box-shadow:0 10px 18px #0002}
+#nav-toggle:checked~nav.main{display:flex}.util .wrap span{display:none}}
+@media(max-width:560px){.g4,.g3,#available-food{grid-template-columns:1fr}.band{padding:44px 0}}
+</style>
+</head>
+<body>
+<div class="util"><div class="wrap"><span>Reducing food waste, one meal at a time</span><div><a href="#login">Login</a><a href="#signup">Sign Up</a><a class="gold" href="#add-food">Donate Food</a></div></div></div>
+<header>
+<div class="bar">
+<a class="brand" href="#home"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" role="img" aria-label="Site logo"><title>Site logo</title><circle cx="24" cy="24" r="22" fill="#f4b942"/><path d="M24 38C12 30 12 16 24 12c12 4 12 18 0 26z" fill="#1b5e3b"/><path d="M24 36V18" stroke="#fff" stroke-width="2" fill="none"/></svg><span>SurplusShare<small>Food Wastage Management</small></span></a>
+<input type="checkbox" id="nav-toggle" aria-label="Toggle menu"><label class="burger" for="nav-toggle">&#9776;</label>
+<nav class="main" aria-label="Main navigation"><a href="#home">Home</a><a href="#how">How It Works</a><a href="#take-action">Get Involved</a><a href="#available-food">Available Food</a><a href="#report">Project Report</a><a href="#about">About</a></nav>
+</div>
+</header>
+<main>
+<section class="hero" id="home"><div class="wrap">
+<div><h1>Rescue surplus food. <em>Reduce waste.</em> Feed communities.</h1>
+<p>SurplusShare connects food donors with recipient organisations, so edible food from canteens, restaurants, events and homes reaches people instead of the bin.</p>
+<a class="btn b1" href="#add-food">Donate Surplus Food</a><a class="btn b2" href="#available-food">Find Available Food</a></div>
+<div><svg xmlns="http://www.w3.org/2000/svg" width="380" height="280" viewBox="0 0 380 280" role="img" aria-label="Illustration of a crate of fresh fruit, bread and a heart"><title>Illustration of a crate of fresh fruit, bread and a heart</title><rect width="380" height="280" rx="24" fill="#e8f3ea"/><circle cx="300" cy="60" r="34" fill="#f4b942"/><path d="M60 70c0-20 30-20 30 0s-30 20-30 0z" fill="#b7d9bf"/><path d="M270 200c0-14 24-14 24 0s-24 14-24 0z" fill="#b7d9bf"/><rect x="70" y="150" width="240" height="100" rx="8" fill="#a0622d"/><rect x="70" y="150" width="240" height="14" fill="#7d4a1f"/><rect x="82" y="180" width="216" height="12" fill="#8a5424"/><rect x="82" y="210" width="216" height="12" fill="#8a5424"/><circle cx="110" cy="138" r="26" fill="#d94b3d"/><circle cx="164" cy="132" r="28" fill="#f08a24"/><circle cx="218" cy="138" r="26" fill="#7fb83e"/><ellipse cx="272" cy="134" rx="30" ry="20" fill="#e3b567"/><path d="M258 130h28M262 138h22" stroke="#c28d3e" stroke-width="3"/><path d="M190 100c-26-18-34-36-18-44 10-4 18 2 18 10 0-8 8-14 18-10 16 8 8 26-18 44z" fill="#e0405a"/></svg></div></div></section>
+
+<div class="band alt"><div class="wrap center">
+<p class="eyebrow">Food waste by the numbers</p><h2>In 2024, 29% of all food in the U.S. went unsold or uneaten.</h2>
+<p>Source: ReFED, U.S. data. The problem is global; this project works at community level.</p>
+<div class="grid g4"><div class="stat"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="icon"><title>icon</title><circle cx="32" cy="32" r="30" fill="#f4b942"/><circle cx="32" cy="32" r="18" fill="#fff"/><circle cx="32" cy="32" r="11" fill="#fbe3a8"/></svg><b>114 billion</b><span>meals that could have gone to people facing food insecurity</span></div><div class="stat"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="icon"><title>icon</title><circle cx="32" cy="32" r="30" fill="#1b5e3b"/><text x="32" y="43" font-size="30" font-family="Arial" font-weight="bold" text-anchor="middle" fill="#fff">$</text></svg><b>$380 billion</b><span>roughly 1.3% of U.S. GDP</span></div><div class="stat"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="icon"><title>icon</title><circle cx="32" cy="32" r="30" fill="#8a6d5a"/><rect x="20" y="24" width="24" height="22" rx="3" fill="#fff"/><rect x="17" y="19" width="30" height="5" rx="2" fill="#fff"/><path d="M27 29v12M32 29v12M37 29v12" stroke="#8a6d5a" stroke-width="2"/></svg><b>24%</b><span>of landfill volume is wasted food</span></div><div class="stat"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="icon"><title>icon</title><circle cx="32" cy="32" r="30" fill="#4a90c2"/><path d="M20 28c6-8 14-4 16 2s-6 6-4 12-12-2-12-14z" fill="#7fb83e"/><path d="M38 18c6 2 8 8 4 12" stroke="#7fb83e" stroke-width="5" fill="none"/></svg><b>Methane</b><span>wasted food in landfills adds to climate-warming emissions</span></div></div></div></div>
+
+<div class="band mint" id="take-action"><div class="wrap center">
+<h2>Here&rsquo;s how you can take action</h2><p>Food waste is a whole-community problem. Whatever your role, there is a way to help.</p>
+<div class="grid g4" style="text-align:left">
+<div class="card"><svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="Basket"><title>Basket</title><rect width="72" height="72" rx="16" fill="#f4b942"/><path d="M18 34h36l-5 20H23z" fill="#fff"/><path d="M26 34c0-14 20-14 20 0" stroke="#fff" stroke-width="4" fill="none"/></svg><p class="tag">FOR FOOD DONORS</p><h3>Share what you can&rsquo;t serve</h3><p>Canteens, restaurants and event teams can list surplus edible food in minutes.</p><a class="more" href="#add-food">Add a listing &rarr;</a></div>
+<div class="card"><svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="Heart"><title>Heart</title><rect width="72" height="72" rx="16" fill="#e0405a"/><path d="M36 54C14 40 16 22 28 20c5 0 8 3 8 7 0-4 3-7 8-7 12 2 14 20-8 34z" fill="#fff"/></svg><p class="tag">FOR RECIPIENTS</p><h3>Find food near you</h3><p>Charities and community kitchens can browse listings and mark what they will collect.</p><a class="more" href="#available-food">Browse listings &rarr;</a></div>
+<div class="card"><svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="Truck"><title>Truck</title><rect width="72" height="72" rx="16" fill="#4a90c2"/><rect x="12" y="28" width="30" height="20" fill="#fff"/><path d="M42 34h10l6 8v6H42z" fill="#fff"/><circle cx="24" cy="50" r="5" fill="#2b5f84"/><circle cx="50" cy="50" r="5" fill="#2b5f84"/></svg><p class="tag">FOR VOLUNTEERS</p><h3>Help it get there</h3><p>Volunteers support pickup and delivery so food arrives before it expires.</p><a class="more" href="#signup">Create an account &rarr;</a></div>
+<div class="card"><svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="Shield"><title>Shield</title><rect width="72" height="72" rx="16" fill="#1b5e3b"/><path d="M36 14l20 8v14c0 12-9 20-20 24C25 56 16 48 16 36V22z" fill="#fff"/><path d="M26 36l7 7 13-14" stroke="#1b5e3b" stroke-width="5" fill="none"/></svg><p class="tag">FOR ADMINISTRATORS</p><h3>Keep it safe and fair</h3><p>Administrators review listings, manage records and keep the platform trustworthy.</p><a class="more" href="#login">Admin login &rarr;</a></div>
+</div></div></div>
+
+<div class="band" id="how"><div class="wrap center">
+<p class="eyebrow">How it works</p><h2>From surplus to supper in three steps</h2>
+<div class="grid g3"><div class="step"><svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56" role="img" aria-label="Step 1"><title>Step 1</title><circle cx="28" cy="28" r="26" fill="#f4b942"/><text x="28" y="38" font-size="28" font-family="Arial" font-weight="bold" text-anchor="middle" fill="#1b5e3b">1</text></svg><h3>List</h3><p>A donor adds the food name, category, quantity, pickup location and available-until time.</p></div><div class="step"><svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56" role="img" aria-label="Step 2"><title>Step 2</title><circle cx="28" cy="28" r="26" fill="#f4b942"/><text x="28" y="38" font-size="28" font-family="Arial" font-weight="bold" text-anchor="middle" fill="#1b5e3b">2</text></svg><h3>Request</h3><p>A recipient organisation browses available listings and marks the one it wants as requested.</p></div><div class="step"><svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56" role="img" aria-label="Step 3"><title>Step 3</title><circle cx="28" cy="28" r="26" fill="#f4b942"/><text x="28" y="38" font-size="28" font-family="Arial" font-weight="bold" text-anchor="middle" fill="#1b5e3b">3</text></svg><h3>Collect</h3><p>The food is picked up and marked collected, so nobody travels for food that is gone.</p></div></div></div></div>
+
+<div class="feat"><div class="wrap"><div><p class="eyebrow" style="color:var(--d)">Featured &mdash; Project report</p><h2>Software Requirements, Design and Testing</h2><p>Read the full report: abstract, objectives, SRS, system design, test cases, limitations and future enhancements.</p></div><a class="btn" href="#report">Read the Report &rarr;</a></div></div>
+
+<div class="band"><div class="wrap two"><section id="login">
+  <h2>Login</h2>
+  <p>Registered donors, recipients and administrators can sign in here.</p>
+  <form action="#home" method="post">
+    <fieldset>
+      <legend>Sign in to your account</legend>
+      <p>
+        <label for="loginEmail">Email address:</label><br>
+        <input type="email" id="loginEmail" name="email" required autocomplete="email" placeholder="you@example.com">
+      </p>
+      <p>
+        <label for="loginPassword">Password:</label><br>
+        <input type="password" id="loginPassword" name="password" required minlength="8" autocomplete="current-password">
+      </p>
+      <p>
+        <label for="loginRole">Login as:</label><br>
+        <select id="loginRole" name="role" required>
+          <option value="">-- Select role --</option>
+          <option>Donor</option>
+          <option>Recipient</option>
+          <option>Administrator</option>
+        </select>
+      </p>
+      <p>
+        <input type="checkbox" id="remember" name="remember">
+        <label for="remember">Remember me</label>
+      </p>
+      <p>
+        <button type="submit">Login</button>
+        <button type="reset">Clear</button>
+      </p>
+    </fieldset>
+  </form>
+  <p>New here? <a href="#signup">Create an account</a></p>
+</section><section id="signup">
+  <h2>Sign Up</h2>
+  <p>Create an account to donate surplus food or to request food as a recipient organisation.</p>
+  <form action="#login" method="post">
+    <fieldset>
+      <legend>Create a new account</legend>
+      <p>
+        <label for="fullName">Full name:</label><br>
+        <input type="text" id="fullName" name="fullName" required autocomplete="name">
+      </p>
+      <p>
+        <label for="signupEmail">Email address:</label><br>
+        <input type="email" id="signupEmail" name="email" required autocomplete="email" placeholder="you@example.com">
+      </p>
+      <p>
+        <label for="phone">Phone number:</label><br>
+        <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number">
+      </p>
+      <p>
+        <label for="signupRole">I am registering as:</label><br>
+        <select id="signupRole" name="role" required>
+          <option value="">-- Select role --</option>
+          <option>Donor (canteen, restaurant, event organiser, household)</option>
+          <option>Recipient (charity, community kitchen, volunteer)</option>
+        </select>
+      </p>
+      <p>
+        <label for="organisation">Organisation name (optional):</label><br>
+        <input type="text" id="organisation" name="organisation">
+      </p>
+      <p>
+        <label for="signupPassword">Password (minimum 8 characters):</label><br>
+        <input type="password" id="signupPassword" name="password" required minlength="8" autocomplete="new-password">
+      </p>
+      <p>
+        <label for="confirmPassword">Confirm password:</label><br>
+        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8" autocomplete="new-password">
+      </p>
+      <p>
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms">I agree to share only safe, edible food and to keep personal data private.</label>
+      </p>
+      <p>
+        <button type="submit">Sign Up</button>
+        <button type="reset">Clear</button>
+      </p>
+    </fieldset>
+  </form>
+  <p>Already have an account? <a href="#login">Login</a></p>
+  <p><small>Note: Without JavaScript or a backend, this page cannot check that the two passwords match, create the account or log you in. The browser only checks the required fields, email format, phone number and password length.</small></p>
+</section></div></div>
+<div class="band alt"><div class="wrap"><section id="add-food">
+  <h2>Add Food</h2>
+  <p>Donors can enter surplus-food details below. Required fields are checked by the browser before submission.</p>
+  <form action="#available-food" method="get">
+    <fieldset>
+      <legend>New surplus-food listing</legend>
+      <p>
+        <label for="foodName">Food name:</label><br>
+        <input type="text" id="foodName" name="foodName" required placeholder="e.g. Vegetable biryani">
+      </p>
+      <p>
+        <label for="category">Category:</label><br>
+        <select id="category" name="category" required>
+          <option value="">-- Select category --</option>
+          <option>Cooked meals</option>
+          <option>Bakery</option>
+          <option>Fruits and vegetables</option>
+          <option>Packaged food</option>
+          <option>Beverages</option>
+        </select>
+      </p>
+      <p>
+        <label for="quantity">Approximate quantity (servings / kg):</label><br>
+        <input type="number" id="quantity" name="quantity" min="1" required>
+      </p>
+      <p>
+        <label for="location">Pickup location:</label><br>
+        <input type="text" id="location" name="location" required placeholder="e.g. Community canteen">
+      </p>
+      <p>
+        <label for="availableUntil">Available until:</label><br>
+        <input type="datetime-local" id="availableUntil" name="availableUntil" required>
+      </p>
+      <p>
+        <button type="submit">Add listing</button>
+        <button type="reset">Clear</button>
+      </p>
+    </fieldset>
+  </form>
+</section></div></div>
+<div class="band mint"><div class="wrap"><section id="available-food">
+  <h2>Available Food</h2>
+  <p>Browse and search current listings.</p>
+  <form action="#available-food" method="get">
+    <p>
+      <label for="search">Search keyword:</label>
+      <input type="search" id="search" name="search" placeholder="Search food or location">
+      <label for="filter">Category:</label>
+      <select id="filter" name="filter">
+        <option>All</option>
+        <option>Cooked meals</option>
+        <option>Bakery</option>
+        <option>Fruits and vegetables</option>
+        <option>Packaged food</option>
+        <option>Beverages</option>
+      </select>
+      <button type="submit">Filter</button>
+    </p>
+  </form>
+
+  <p><em>Sample listings (demonstration data):</em></p>
+
+  <article>
+    <h3>Vegetable Biryani</h3>
+    <ul>
+      <li>Category: Cooked meals</li>
+      <li>Quantity: 40 servings</li>
+      <li>Pickup location: Community canteen</li>
+      <li>Available until: Today, 8:00 PM</li>
+      <li>Status: <strong>Available</strong></li>
+    </ul>
+    <p><button type="button">Mark as Requested</button> <button type="button">Mark as Collected</button></p>
+  </article>
+
+  <article>
+    <h3>Bread and Buns</h3>
+    <ul>
+      <li>Category: Bakery</li>
+      <li>Quantity: 15 kg</li>
+      <li>Pickup location: Main Street Bakery</li>
+      <li>Available until: Today, 9:30 PM</li>
+      <li>Status: <strong>Requested</strong></li>
+    </ul>
+    <p><button type="button">Mark as Collected</button></p>
+  </article>
+
+  <article>
+    <h3>Fresh Fruit Boxes</h3>
+    <ul>
+      <li>Category: Fruits and vegetables</li>
+      <li>Quantity: 25 kg</li>
+      <li>Pickup location: Community Hall</li>
+      <li>Available until: Tomorrow, 10:00 AM</li>
+      <li>Status: <strong>Collected</strong></li>
+    </ul>
+  </article>
+
+  <p><small>Note: This pure-HTML version has no scripting, so listings and status buttons are static. A backend or JavaScript is needed to store and update listings.</small></p>
+</section></div></div>
+<div class="band "><div class="wrap"><section id="report">
+  <h2>Project Report</h2>
+
+  <nav aria-label="Report contents">
+    <h3>Table of Contents</h3>
+    <ol>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#problem">Problem Statement and Objectives</a></li>
+      <li><a href="#scope">Scope and Feasibility</a></li>
+      <li><a href="#srs">Software Requirements Specification (SRS)</a></li>
+      <li><a href="#design">System Design</a></li>
+      <li><a href="#implementation">Implementation Plan and Web Interface</a></li>
+      <li><a href="#testing">Testing and Validation</a></li>
+      <li><a href="#limitations">Limitations and Future Enhancements</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </nav>
+
+  <h3 id="abstract">Abstract</h3>
+  <p>Food wastage is a practical problem in homes, hostels, canteens, restaurants and events. This project proposes a simple website through which food donors can list surplus edible food and authorised recipient organisations can express interest in collecting it. The website records food details, quantity, pickup location, availability time and status. The proposed solution aims to improve coordination, reduce avoidable waste and make surplus-food redistribution easier. This report contains the Software Requirements Specification (SRS), system design, implementation plan, testing approach and sample web-page implementation.</p>
+
+  <h3 id="intro">1. Introduction</h3>
+  <p>Food wastage occurs when edible food is discarded or remains unused despite being potentially useful to others. Surplus food may be available at canteens, restaurants, functions and households, while community groups may be able to redistribute it. A central website can help connect these groups and provide a clear record of available food and collection status.</p>
+  <h4>Purpose</h4>
+  <p>To design and demonstrate a responsive client-side website that organises surplus-food listings and helps donors and recipients coordinate collection.</p>
+  <h4>Definitions</h4>
+  <dl>
+    <dt>Donor</dt><dd>A person or organisation offering surplus food.</dd>
+    <dt>Recipient</dt><dd>An organisation or authorised person requesting a listing.</dd>
+    <dt>Listing</dt><dd>A record containing food details and pickup information.</dd>
+    <dt>Responsive design</dt><dd>A layout that adapts to different screen sizes.</dd>
+  </dl>
+
+  <h3 id="problem">2. Problem Statement and Objectives</h3>
+  <p>Surplus food information is often shared informally, which can lead to delays, missed collections and limited visibility. The proposed website provides a single interface to publish and browse available food listings.</p>
+  <h4>Objectives</h4>
+  <ul>
+    <li>Provide a simple form to add a surplus-food listing.</li>
+    <li>Display available listings in a readable, searchable layout.</li>
+    <li>Capture quantity, food category, pickup location and availability time.</li>
+    <li>Allow users to mark a listing as requested or collected in the demonstration.</li>
+    <li>Use semantic HTML, responsive CSS and JavaScript DOM/event handling.</li>
+    <li>Demonstrate basic version-control practices with Git and GitHub.</li>
+  </ul>
+
+  <h3 id="scope">3. Scope and Feasibility</h3>
+  <h4>Project Scope</h4>
+  <p>The prototype focuses on the user interface and client-side behaviour. It can add listings, filter them by keyword/category and update their status during a browser session. A production deployment would require a backend, database, secure user accounts and operational procedures.</p>
+  <h4>Feasibility</h4>
+  <ul>
+    <li><strong>Technical:</strong> HTML5, CSS3 and JavaScript are sufficient for a working front-end prototype.</li>
+    <li><strong>Economic:</strong> the prototype can be developed using free tools and a standard computer.</li>
+    <li><strong>Operational:</strong> the forms and listing cards are designed for users with basic web familiarity.</li>
+    <li><strong>Schedule:</strong> the work can be completed in stages &mdash; requirements, design, coding, testing and documentation.</li>
+  </ul>
+
+  <h3 id="srs">4. Software Requirements Specification (SRS)</h3>
+  <h4>Functional Requirements</h4>
+  <table>
+    <caption>Functional requirements</caption>
+    <thead><tr><th scope="col">ID</th><th scope="col">Requirement</th></tr></thead>
+    <tbody>
+      <tr><td>FR-01</td><td>The system shall allow a donor to enter food name, category, quantity, pickup location and available-until time.</td></tr>
+      <tr><td>FR-02</td><td>The system shall validate required fields before adding a listing.</td></tr>
+      <tr><td>FR-03</td><td>The system shall display active listings as cards.</td></tr>
+      <tr><td>FR-04</td><td>The system shall filter listings using a keyword and category.</td></tr>
+      <tr><td>FR-05</td><td>The system shall allow a listing status to be changed to Requested or Collected.</td></tr>
+      <tr><td>FR-06</td><td>The system shall show a clear message when no listing matches the filter.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Non-Functional Requirements</h4>
+  <ul>
+    <li><strong>Usability:</strong> clear labels, readable text and straightforward navigation.</li>
+    <li><strong>Accessibility:</strong> semantic headings, labels associated with inputs and keyboard-friendly controls.</li>
+    <li><strong>Responsiveness:</strong> usable on desktop, tablet and mobile screens.</li>
+    <li><strong>Reliability:</strong> invalid or incomplete form entries should not create listings.</li>
+    <li><strong>Maintainability:</strong> separate HTML, CSS and JavaScript files.</li>
+    <li><strong>Privacy and safety:</strong> a real deployment must protect user data and avoid publishing sensitive personal information.</li>
+  </ul>
+
+  <h4>Hardware and Software Requirements</h4>
+  <p><strong>Hardware:</strong> computer or laptop, keyboard, mouse/touchpad and internet access for optional hosting.</p>
+  <p><strong>Software:</strong> modern web browser, text editor (such as Visual Studio Code) and Git. The prototype uses HTML5, CSS3 and vanilla JavaScript; no paid software is required.</p>
+
+  <h3 id="design">5. System Design</h3>
+  <h4>Architecture</h4>
+  <p>For the prototype, the browser renders the HTML interface, CSS controls presentation and JavaScript validates forms, filters listings and updates status. Listing data is held in memory for the current session; it is not shared across users.</p>
+  <p><strong>Donor / Recipient</strong> &rarr; <strong>Web Interface (HTML)</strong> &rarr; <strong>JavaScript Validation &amp; Filtering</strong> &rarr; <strong>Listing Cards and Status</strong></p>
+
+  <h4>Data Model</h4>
+  <table>
+    <caption>Listing data model</caption>
+    <thead><tr><th scope="col">Field</th><th scope="col">Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>Unique identifier for a listing</td></tr>
+      <tr><td>foodName</td><td>Name or description of the food</td></tr>
+      <tr><td>category</td><td>Food category</td></tr>
+      <tr><td>quantity</td><td>Approximate quantity available</td></tr>
+      <tr><td>location</td><td>Pickup location</td></tr>
+      <tr><td>availableUntil</td><td>Collection deadline</td></tr>
+      <tr><td>status</td><td>Available, Requested or Collected</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Use Cases</h4>
+  <ul>
+    <li>Donor adds a listing and checks the details before submission.</li>
+    <li>Recipient browses and filters currently available listings.</li>
+    <li>Recipient marks an appropriate listing as Requested.</li>
+    <li>After collection, the listing is marked Collected so it is no longer treated as available.</li>
+  </ul>
+
+  <h3 id="implementation">6. Implementation Plan and Web Interface</h3>
+  <h4>Technologies</h4>
+  <p>HTML5 provides the structure and accessible form controls. CSS3 provides responsive layout, spacing, colours and card styling. JavaScript (ES6+) handles form submission, validation, DOM updates and filtering. Git/GitHub can be used to track changes and maintain project versions.</p>
+
+  <h4>Suggested Project Structure</h4>
+<pre>food-wastage-management/
+ |-- index.html
+ |-- style.css
+ |-- script.js
+ |-- README.md</pre>
+
+  <h4>Main Pages / Sections</h4>
+  <ul>
+    <li><strong>Home:</strong> introduces the purpose of the website.</li>
+    <li><strong>Login / Sign Up:</strong> forms for registering and signing in as a donor, recipient or administrator.</li>
+    <li><strong>Add Food:</strong> form for creating a surplus-food listing.</li>
+    <li><strong>Available Food:</strong> cards containing food details and status actions.</li>
+    <li><strong>About / Contact:</strong> explains the project and provides a contact method in a production version.</li>
+  </ul>
+
+  <h4>Core Interaction Flow</h4>
+  <ol>
+    <li>Open the website in a browser.</li>
+    <li>Enter the food details in the Add Food form.</li>
+    <li>Submit the form; JavaScript checks required fields.</li>
+    <li>A valid listing appears in the available-food section.</li>
+    <li>Use the search/filter controls to find a listing.</li>
+    <li>Update its status when it is requested or collected.</li>
+  </ol>
+  <blockquote><strong>Implementation note:</strong> This report specifies the front-end behaviour and file structure. The prototype must be coded and tested in the listed files before claiming a live, fully deployed system.</blockquote>
+
+  <h3 id="testing">7. Testing and Validation</h3>
+  <table>
+    <caption>Test cases</caption>
+    <thead><tr><th scope="col">Test ID</th><th scope="col">Test case</th><th scope="col">Expected result</th></tr></thead>
+    <tbody>
+      <tr><td>TC-01</td><td>Submit empty form</td><td>Required-field validation prevents submission</td></tr>
+      <tr><td>TC-02</td><td>Submit valid food details</td><td>New listing appears in the list</td></tr>
+      <tr><td>TC-03</td><td>Search using a matching keyword</td><td>Only matching listings are shown</td></tr>
+      <tr><td>TC-04</td><td>Search using a non-matching keyword</td><td>No-results message is shown</td></tr>
+      <tr><td>TC-05</td><td>Mark listing as Requested</td><td>Status label updates</td></tr>
+      <tr><td>TC-06</td><td>Mark listing as Collected</td><td>Status label updates and listing is not shown as available</td></tr>
+      <tr><td>TC-07</td><td>Open at narrow screen width</td><td>Layout adapts without horizontal overflow</td></tr>
+    </tbody>
+  </table>
+  <p>Testing should be carried out in a modern browser after implementation. Record actual results (Pass/Fail) and correct defects before submission.</p>
+
+  <h3 id="limitations">8. Limitations and Future Enhancements</h3>
+  <h4>Limitations</h4>
+  <ul>
+    <li>Data is stored only in the current browser session and is not synchronised between users.</li>
+    <li>No real authentication, database, donor verification, notifications or map integration is included in the front-end design.</li>
+    <li>Food safety, collection, transport and recipient eligibility require real-world procedures beyond the website.</li>
+  </ul>
+  <h4>Future Enhancements</h4>
+  <ul>
+    <li>Add a backend API and database for persistent listings.</li>
+    <li>Introduce secure sign-in and role-based permissions.</li>
+    <li>Add recipient verification, collection confirmations and email/SMS notifications.</li>
+    <li>Integrate maps for pickup coordination and provide an administrator dashboard.</li>
+    <li>Use the Fetch API to load and update JSON data from a server.</li>
+  </ul>
+
+  <h3 id="conclusion">9. Conclusion</h3>
+  <p>The Food Wastage Management Website is a practical project that applies semantic HTML, responsive CSS and JavaScript interaction to a community problem. Its requirements and design define a clear path from food listing creation to collection status updates. The front-end prototype can be extended with a secure backend and database to support real multi-user coordination.</p>
+
+  <h3 id="references">10. References</h3>
+  <ol>
+    <li>MDN Web Docs, HTML: <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">https://developer.mozilla.org/en-US/docs/Web/HTML</a></li>
+    <li>MDN Web Docs, CSS: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS">https://developer.mozilla.org/en-US/docs/Web/CSS</a></li>
+    <li>MDN Web Docs, JavaScript: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">https://developer.mozilla.org/en-US/docs/Web/JavaScript</a></li>
+    <li>Git documentation: <a href="https://git-scm.com/doc">https://git-scm.com/doc</a></li>
+  </ol>
+</section></div></div>
+<div class="band alt"><div class="wrap"><section id="about">
+  <h2>About / Contact</h2>
+  <address>
+    <strong>Created by:</strong> Phranav Kumar S
+  </address>
+  <p>A contact method (email/phone) would be provided in a production version.</p>
+</section></div></div>
+
+<div class="band"><div class="wrap"><h2>Learn more about food waste</h2><ul>
+<li><a href="https://refed.org/food-waste/the-problem">The problem of food waste (ReFED)</a></li>
+<li><a href="https://refed.org/food-waste/the-solutions/">Food waste solutions (ReFED)</a></li>
+<li><a href="https://refed.org/food-waste/resource-library">Reports and resource library (ReFED)</a></li></ul></div></div>
+</main>
+<footer><div class="wrap"><div class="cols">
+<div><b style="color:#fff;font-size:1.3rem">SurplusShare</b><p>A food wastage management website: connecting surplus food with the people who need it.</p></div>
+<div><h4>EXPLORE</h4><a href="#home">Home</a><a href="#how">How it works</a><a href="#take-action">Get involved</a><a href="#report">Project report</a></div>
+<div><h4>ACCOUNT</h4><a href="#login">Login</a><a href="#signup">Sign up</a><a href="#add-food">Add food</a><a href="#available-food">Available food</a></div>
+<div><h4>CREATED BY</h4>Phranav Kumar S</div></div>
+<div class="fine">&copy; 2026 SurplusShare. Layout inspired by <a href="https://refed.org/">ReFED</a>; statistics attributed to ReFED. <a href="#home">Back to top</a></div></div></footer>
+</body>
+</html>
